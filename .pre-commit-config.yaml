@@ -58,6 +58,7 @@ repos:
     rev: 1.7.1
     hooks:
       - id: bandit
+        exclude: (tests/)
   # Flake8
   - repo: https://gitlab.com/pycqa/flake8
     rev: 3.9.2
