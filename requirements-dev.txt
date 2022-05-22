@@ -1,2 +1,4 @@
+-r requirements.txt
+
 # enforcing dev practices on commit
 pre-commit==2.19.0
