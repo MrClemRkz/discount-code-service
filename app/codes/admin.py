@@ -1,4 +1,7 @@
-# from django.contrib import admin
+from django.contrib import admin
+
+from codes.models import BrandCode, Code
 
 
-# Register your models here.
+admin.site.register(Code)
+admin.site.register(BrandCode)
