@@ -1,11 +1,37 @@
 import logging
 import random
 import string
+from datetime import date
 from typing import List
 
 from django.conf import settings
 
 from codes.models import BrandCode, Code, CodeCursor
+
+
+def get_code_by_brand(brand: str, assigned_to: str) -> BrandCode:
+    """
+    Get avaialbe discount code for the given Brand.
+
+    Arguments:
+        brand: Brand reference
+
+    Returns:
+        BrandCode object.
+
+    """
+    code_list = BrandCode.objects.filter(
+        brand=brand, is_active=True, is_redeemed=False, assigned_to=None
+    )
+    code_list = code_list.filter(expiration_date__isnull=True) | code_list.filter(
+        expiration_date__lte=date.today()
+    )
+    if code_list.count() > 0:
+        code = code_list.first()
+        code.assigned_to = assigned_to
+        code.save()
+
+        return code
 
 
 def generate_codes(no_of_codes: int) -> bool:

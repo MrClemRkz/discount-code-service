@@ -49,8 +49,8 @@ class TestCode:
         )
         assert BrandCode.objects.filter(brand=self.BRAND_REFERENCE, is_active=True).count() > 0
 
-        response = api_client().get(self.ENDPOINT + "apply/")
+        response = api_client().get(self.ENDPOINT + "discountcode/" + self.BRAND_REFERENCE)
         json_response = json.loads(response.content)
 
         assert response.status_code == 200
-        assert len(json_response["code"]) == settings.CODE_SIZE
+        assert len(json_response["code"]) == int(settings.CODE_SIZE)

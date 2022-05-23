@@ -7,6 +7,18 @@ from codes import services
 from codes.serializers import BrandCodeInputSerializer, BrandCodeSerializer
 
 
+class CodeView(APIView):
+    """Get single BrandCode data."""
+
+    @swagger_auto_schema(responses={"200": BrandCodeSerializer})
+    def get(self, request, brand, format=None):
+        """Get single code of a brand."""
+        # TODO: using request token, derive the user data
+        code = services.get_code_by_brand(brand=brand, assigned_to="TEMPUSER")
+        serializer = BrandCodeSerializer(code)
+        return Response(serializer.data)
+
+
 class CodeAction(APIView):
     """Code model related CRUD actions."""
 
