@@ -25,11 +25,21 @@ class TestCode:
 
     def test_create_codes_for_brand(self, api_client):
         """Test create codes for brand."""
-        data = {"brand": self.BRAND_REFERENCE, "count": 30}
+        # prepare codes
+        services.generate_codes(no_of_codes=10)
+        data = {
+            "brand": self.BRAND_REFERENCE,
+            "count": 5,
+            "discount_type": "AMOUNT",
+            "discount_value": 200.00,
+        }
         response = api_client().post(self.ENDPOINT, data=data, format="json")
 
-        assert response.status_code == 200
-        assert BrandCode.objects.filter(brand=self.BRAND_REFERENCE, is_active=True) == data["count"]
+        assert response.status_code == 201
+        assert (
+            BrandCode.objects.filter(brand=self.BRAND_REFERENCE, is_active=True).count()
+            == data["count"]
+        )
 
     def test_get_a_code(self, api_client):
         """Test get a code."""

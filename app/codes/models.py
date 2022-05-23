@@ -36,7 +36,7 @@ class BrandCode(models.Model):
     modified_at = models.DateTimeField(auto_now=True)
 
     def __str__(self) -> str:
-        return f"{self.brand_ref} - {self.code}"
+        return f"{self.brand} - {self.code}"
 
 
 class CodeCursor(models.Model):
