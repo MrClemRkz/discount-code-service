@@ -4,6 +4,9 @@
 
 ### Development
 1. Install packages using `requirements-dev.txt`.
+```bash
+$ pip install -r requirements-dev.txt
+```
 2. Setup pre-commit hooks with
 ```bash
 $ pre-commit install
