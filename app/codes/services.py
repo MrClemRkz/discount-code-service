@@ -79,6 +79,33 @@ def get_last_code_position(brand: str) -> int:
         return 0
 
 
+def set_cursor_position(code: int, brand: str) -> bool:
+    """
+    Set last code position.
+
+    Arguments:
+        code_position: last code position
+        brand: Brand reference
+
+    Returns:
+        Boolean to indicate success of the function execution.
+
+    """
+    brand_data = CodeCursor.objects.filter(brand=brand)
+    if brand_data.count() > 0:
+        cursor = brand_data.last()
+        cursor.last_code = code
+    else:
+        cursor = CodeCursor(brand=brand, last_code=code)
+
+    try:
+        cursor.save()
+        return True
+    except Exception as ex:
+        logging.error(ex)
+        return False
+
+
 def add_codes_to_brand(no_of_codes: int, data: dict) -> List[BrandCode]:
     """
     Add codes to brand.
@@ -91,7 +118,10 @@ def add_codes_to_brand(no_of_codes: int, data: dict) -> List[BrandCode]:
         List of newly created code for the given brand
 
     """
+    # get the last pulled code's position in the buffer code list.
     last_code_position = get_last_code_position(data["brand"])
+
+    # get new set of codes from the buffer list
     if last_code_position > 0:
         code_list = Code.objects.filter(
             id__gt=last_code_position,
@@ -99,6 +129,11 @@ def add_codes_to_brand(no_of_codes: int, data: dict) -> List[BrandCode]:
         )
     else:
         code_list = Code.objects.filter(id__lte=no_of_codes)
+
+    # update the last pulled code's position of the buffer list.
+    set_cursor_position(
+        code=Code.objects.get(pk=last_code_position + no_of_codes), brand=data["brand"]
+    )
 
     active_codes = []
     for code in code_list:
